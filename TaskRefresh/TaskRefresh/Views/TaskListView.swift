@@ -9,7 +9,7 @@ import SwiftUI
 struct TaskListView: View {
     @State private var model: [TodoTask] = TodoTask.sample
     @State private var showAddTaskSheet: Bool = false
-    
+    @State private var emptyTask = TodoTask.emptyTask
     var body: some View {
         NavigationStack {
             List {
@@ -19,7 +19,7 @@ struct TaskListView: View {
                             Toggle(isOn: $task.isCompleted) {
                                 VStack(alignment: .leading) {
                                     Text(task.title)
-                                    Text(task.priority.description())
+                                    Text(task.priority.name)
                                         .font(.caption)
                                 }
                         }
@@ -32,14 +32,30 @@ struct TaskListView: View {
             }
             .toolbar {
                 Button {
-                    showAddTaskSheet.toggle()
+                    showAddTaskSheet = true
                 } label: {
                     Image(systemName: "plus")
                 }
                 EditButton()
             }
             .sheet(isPresented: $showAddTaskSheet) {
-                TaskFormView()
+                NavigationStack {
+                    TaskFormView(todoTask: $emptyTask)
+                        .navigationTitle(Text("New Task"))
+                        .toolbar {
+                            ToolbarItem(placement: .cancellationAction) {
+                                Button("Cancel") {
+                                    showAddTaskSheet = false
+                                }
+                            }
+                            ToolbarItem(placement: .confirmationAction) {
+                                Button("Add") {
+                                    model.append($emptyTask.wrappedValue)
+                                    showAddTaskSheet = false
+                                }
+                            }
+                        }
+                }
             }
         }
     }
