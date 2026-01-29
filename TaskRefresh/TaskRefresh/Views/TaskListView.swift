@@ -52,12 +52,14 @@ struct TaskListView: View {
                                 Button("Add") {
                                     let newTask = TodoTask(title: emptyTask.title, isCompleted: false, dueDate: Date(), priority: emptyTask.priority)
                                     
+                                    showAddTaskSheet = false
+                                    
                                     emptyTask.title = ""
                                     emptyTask.isCompleted = false
                                     emptyTask.priority = .low
+                                    emptyTask.dueDate = Date()
                                     
                                     model.append(newTask)
-                                    showAddTaskSheet = false
                                 }
                             }
                         }

@@ -50,7 +50,8 @@ struct TaskDetailView: View {
         .navigationTitle("Details")
         .toolbar {
             Button("Edit") {
-               showEditTaskSheet = true
+                editingTodoTask = todoTask
+                showEditTaskSheet = true
             }
         }
         .sheet(isPresented: $showEditTaskSheet) {
