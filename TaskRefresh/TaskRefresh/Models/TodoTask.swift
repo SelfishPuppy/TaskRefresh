@@ -13,7 +13,10 @@ struct TodoTask: Identifiable {
     var isCompleted: Bool = false
     var dueDate: Date = Date()
     var priority: Priority = .low
-    static var emptyTask: TodoTask { .init(title: "") }
+    
+    static var emptyTask: TodoTask {
+        TodoTask(title: "")
+    }
     
 }
 

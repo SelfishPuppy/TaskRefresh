@@ -50,7 +50,13 @@ struct TaskListView: View {
                             }
                             ToolbarItem(placement: .confirmationAction) {
                                 Button("Add") {
-                                    model.append($emptyTask.wrappedValue)
+                                    let newTask = TodoTask(title: emptyTask.title, isCompleted: false, dueDate: Date(), priority: emptyTask.priority)
+                                    
+                                    emptyTask.title = ""
+                                    emptyTask.isCompleted = false
+                                    emptyTask.priority = .low
+                                    
+                                    model.append(newTask)
                                     showAddTaskSheet = false
                                 }
                             }
