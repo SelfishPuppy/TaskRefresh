@@ -10,7 +10,20 @@ import SwiftUI
 struct TaskFormView: View {
     @Binding var todoTask: TodoTask
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Form {
+            Section {
+                TextField("Title", text: $todoTask.title)
+                Picker("Priority", selection: $todoTask.priority) {
+                    ForEach(Priority.allCases) { priority in
+                            Text(priority.rawValue).tag(priority)
+                    }
+                }
+                DatePicker("Due Date", selection: $todoTask.dueDate, displayedComponents: [.date])
+                Toggle(isOn: $todoTask.isCompleted) {
+                    Text("Completed")
+                }
+            }
+        }
     }
 }
 
