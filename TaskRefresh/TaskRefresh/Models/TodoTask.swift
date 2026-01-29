@@ -15,6 +15,14 @@ struct TodoTask: Identifiable {
     var priority: Priority = .low
     
     enum Priority {
-    case low, medium, high
+        case low, medium, high
+        
+        func description() -> String {
+            switch self {
+            case .low: return "Low"
+            case .medium: return "Medium"
+            case .high: return "High"
+            }
+        }
     }
 }
