@@ -9,8 +9,8 @@ import Foundation
 
 extension TodoTask {
     static var sample: [TodoTask] = [
-        TodoTask(title: "Sample task", isCompleted: false),
-        TodoTask(title: "Another sample task", isCompleted: true),
-        TodoTask(title: "Yet another sample task", isCompleted: false)
+        TodoTask(title: "Sample task", isCompleted: false, sortIndex: 0),
+        TodoTask(title: "Another sample task", isCompleted: true,sortIndex: 1),
+        TodoTask(title: "Yet another sample task", isCompleted: false,sortIndex: 2)
     ]
 }

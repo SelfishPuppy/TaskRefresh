@@ -6,17 +6,24 @@
 //
 
 import Foundation
+import SwiftData
 
-struct TodoTask: Identifiable {
-    let id: UUID = UUID()
+@Model
+class TodoTask: Identifiable {
+    var id: UUID
     var title: String
-    var isCompleted: Bool = false
-    var dueDate: Date = Date()
-    var priority: Priority = .low
+    var isCompleted: Bool
+    var dueDate: Date
+    var priority: Priority
+    var sortIndex: Int
     
-    static var emptyTask: TodoTask {
-        TodoTask(title: "")
+    init(id: UUID = UUID(), title: String, isCompleted: Bool = false, dueDate: Date = Date(), priority: Priority = .low, sortIndex: Int ) {
+        self.id = id
+        self.title = title
+        self.isCompleted = isCompleted
+        self.dueDate = dueDate
+        self.priority = priority
+        self.sortIndex = sortIndex
     }
-    
 }
 

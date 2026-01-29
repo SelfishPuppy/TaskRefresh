@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct TaskRefreshApp: App {
@@ -13,5 +14,6 @@ struct TaskRefreshApp: App {
         WindowGroup {
             TaskListView()
         }
+        .modelContainer(for: TodoTask.self)
     }
 }

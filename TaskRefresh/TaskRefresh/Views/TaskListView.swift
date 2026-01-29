@@ -5,30 +5,42 @@
 //  Created by Maxym Tyshchenko on 28.01.2026.
 //
 import SwiftUI
+import SwiftData
 
 struct TaskListView: View {
-    @State private var model: [TodoTask] = TodoTask.sample
+    @Query(sort: \TodoTask.sortIndex) private var todoTasks: [TodoTask]
     @State private var showAddTaskSheet: Bool = false
-    @State private var emptyTask = TodoTask.emptyTask
+    @Environment(\.modelContext) private var context: ModelContext
+   
     var body: some View {
         NavigationStack {
             List {
-                ForEach($model) { $task in
-                        NavigationLink(destination: TaskDetailView(todoTask: $task)) {
-                                
-                            Toggle(isOn: $task.isCompleted) {
-                                VStack(alignment: .leading) {
+                ForEach(todoTasks) { task in
+                        NavigationLink(destination: TaskDetailView(todoTask: task)) {
+                               VStack(alignment: .leading) {
                                     Text(task.title)
                                     Text(task.priority.name)
                                         .font(.caption)
-                                }
-                        }
+                               }
+                        
+                                
+//                            Toggle(isOn: task.isCompleted) {
+//                                VStack(alignment: .leading) {
+//                                    Text(task.title)
+//                                    Text(task.priority.name)
+//                                        .font(.caption)
+//                                }
+//                        }
                     }
                 }
                 .onMove(perform: move)
-                .onDelete(perform: { indexSet in
-                        model.remove(atOffsets: indexSet)
-                })
+                .onDelete { indexSet in
+                    for index in indexSet {
+                        let task = todoTasks[index]
+                        context.delete(task)
+                    }
+                    try? context.save()
+                }
             }
             .toolbar {
                 Button {
@@ -40,38 +52,27 @@ struct TaskListView: View {
             }
             .sheet(isPresented: $showAddTaskSheet) {
                 NavigationStack {
-                    TaskFormView(todoTask: $emptyTask)
+                    TaskFormView(todoTask: nil)
                         .navigationTitle(Text("New Task"))
-                        .toolbar {
-                            ToolbarItem(placement: .cancellationAction) {
-                                Button("Cancel") {
-                                    showAddTaskSheet = false
-                                }
-                            }
-                            ToolbarItem(placement: .confirmationAction) {
-                                Button("Add") {
-                                    let newTask = TodoTask(title: emptyTask.title, isCompleted: false, dueDate: Date(), priority: emptyTask.priority)
-                                    
-                                    showAddTaskSheet = false
-                                    
-                                    emptyTask.title = ""
-                                    emptyTask.isCompleted = false
-                                    emptyTask.priority = .low
-                                    emptyTask.dueDate = Date()
-                                    
-                                    model.append(newTask)
-                                }
-                            }
-                        }
                 }
             }
         }
     }
     private func move(from offsets: IndexSet,to destination: Int) {
-        model.move(fromOffsets: offsets, toOffset: destination)
+        var items = todoTasks
+        
+        items.move(fromOffsets: offsets, toOffset: destination)
+        
+        for (index, item) in items.enumerated() {
+            if (item.sortIndex != index) {
+                item.sortIndex = index
+            }
+        }
     }
 }
 
 #Preview {
     TaskListView()
+        .modelContainer(for: TodoTask.self)
 }
+

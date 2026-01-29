@@ -6,11 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct TaskDetailView: View {
-    @Binding var todoTask: TodoTask
+    let todoTask: TodoTask
+    
     @State private var showEditTaskSheet = false
-    @State private var editingTodoTask = TodoTask.emptyTask
+    @State private var isCompleted: Bool
+    
+    init(todoTask: TodoTask) {
+        self.todoTask = todoTask
+        self.isCompleted = todoTask.isCompleted
+    }
+
     private var formattedDate: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
@@ -29,7 +37,7 @@ struct TaskDetailView: View {
                 HStack {
                     Text("Completed")
                     Spacer()
-                    Toggle(isOn: $todoTask.isCompleted) {
+                    Toggle(isOn: $isCompleted) {
                         EmptyView()
                     }
                     .scaleEffect(1.5)
@@ -50,35 +58,21 @@ struct TaskDetailView: View {
         .navigationTitle("Details")
         .toolbar {
             Button("Edit") {
-                editingTodoTask = todoTask
                 showEditTaskSheet = true
             }
         }
         .sheet(isPresented: $showEditTaskSheet) {
             NavigationStack {
-                TaskFormView(todoTask: $editingTodoTask)
+                TaskFormView(todoTask: todoTask)
                     .navigationTitle(todoTask.title)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") {
-                                showEditTaskSheet = false
-                            }
-                        }
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Done") {
-                                showEditTaskSheet = false
-                                todoTask = editingTodoTask
-                            }
-                        }
-                    }
             }
         }
     }
 }
 
-#Preview {
-    @Previewable @State var todoTask = TodoTask.sample[0]
+#Preview(traits: .taskSampleData) {
+    @Previewable @Query(sort: \TodoTask.title) var todoTasks: [TodoTask]
     NavigationStack {
-        TaskDetailView(todoTask: $todoTask)
+        TaskDetailView(todoTask: todoTasks[0])
     }
 }
