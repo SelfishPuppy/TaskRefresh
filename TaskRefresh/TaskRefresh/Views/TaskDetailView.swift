@@ -8,11 +8,22 @@
 import SwiftUI
 
 struct TaskDetailView: View {
+    @Binding var todoTask: TodoTask
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List {
+            Section {
+                HStack {
+                    Text("Title")
+                    Spacer()
+                    
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    TaskDetailView()
+    @Previewable @State var todoTask = TodoTask.sample[0]
+    TaskDetailView(todoTask: $todoTask)
 }

@@ -14,7 +14,7 @@ struct TaskListView: View {
         NavigationStack {
             List {
                 ForEach($model) { $task in
-                        NavigationLink(destination: TaskDetailView()) {
+                        NavigationLink(destination: TaskDetailView(todoTask: $task)) {
                                 
                             Toggle(isOn: $task.isCompleted) {
                                 VStack(alignment: .leading) {
