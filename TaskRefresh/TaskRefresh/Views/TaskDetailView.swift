@@ -19,7 +19,7 @@ struct TaskDetailView: View {
     }
     
     var body: some View {
-        List {
+        Form {
             Section {
                 HStack {
                     Text("Title")
@@ -43,11 +43,7 @@ struct TaskDetailView: View {
                 HStack {
                     Text("Priority")
                     Spacer()
-                    Picker("Priority", selection: $todoTask.priority) {
-                        ForEach(Priority.allCases) { priority in
-                                Text(priority.rawValue).tag(priority)
-                        }
-                    }
+                    Text(todoTask.priority.name)
                 }
             }
         }
